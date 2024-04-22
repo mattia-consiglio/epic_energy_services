@@ -10,9 +10,9 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Table(name = "Fatture")
+@Table(name = "Fattura")
 
-public class Fatture {
+public class Fattura {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -22,5 +22,5 @@ public class Fatture {
 
     @ManyToOne
     @JoinColumn(name = "stato_id")
-    private StatoFatture stato;
+    private StatoFattura stato;
 }

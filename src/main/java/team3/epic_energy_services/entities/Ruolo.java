@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "roles")
-public class Role {
+public class Ruolo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)

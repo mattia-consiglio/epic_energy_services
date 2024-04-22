@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "Stato_fattura")
-public class StatoFatture {
+public class StatoFattura {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

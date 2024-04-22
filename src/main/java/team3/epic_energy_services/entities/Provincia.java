@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Province {
+public class Provincia {
     private String nome;
     private String sigla;
 
 
-    public Province(String nome, String sigla) {
+    public Provincia(String nome, String sigla) {
         this.nome = nome;
         this.sigla = sigla;
     }
