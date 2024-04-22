@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-import team3.epic_energy_services.entities.User;
+import team3.epic_energy_services.entities.Utente;
 import team3.epic_energy_services.exceptions.UnauthorizedException;
 import team3.epic_energy_services.services.UserService;
 
@@ -35,8 +35,8 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorizationHeader.substring(7);
         jwtTools.validateToken(token);
         String subject = jwtTools.getSubjectFromToken(token);
-        User user = userService.getUser(UUID.fromString(subject));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Utente utente = userService.getUser(UUID.fromString(subject));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(utente, null, utente.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
