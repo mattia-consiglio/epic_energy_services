@@ -2,8 +2,8 @@ package team3.epic_energy_services.entities;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -12,8 +12,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@Table(name = "customers")
+@NoArgsConstructor
+@Table(name = "clienti")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,10 +34,10 @@ public class Cliente {
     private String telefonoContatto;
     private String logoAziendale;
     @ManyToOne
-    @JoinColumn(name = "id_indirizzo_sede_legale")
+    @JoinColumn(name = "sede_legale_id")
     private Indirizzo sedeLegale;
     @ManyToOne
-    @JoinColumn(name = "id_indirizzo_sede_operativa")
+    @JoinColumn(name = "sede_operativa_id")
     private Indirizzo sedeOperativa;
 
     public Cliente(TypeCustomers ragioneSociale, int partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, double fatturatoAnnuale, String pec, int telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, String logoAziendale, Indirizzo sedeLegale, Indirizzo sedeOperativa) {
