@@ -8,9 +8,9 @@ import lombok.Setter;
 @Getter
 public class Comune {
     private String nome;
-    private Province provincia;
+    private Provincia provincia;
 
-    public Comune(String nome, Province provincia) {
+    public Comune(String nome, Provincia provincia) {
         this.nome = nome;
         this.provincia = provincia;
     }

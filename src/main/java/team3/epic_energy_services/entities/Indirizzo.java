@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Indirizzi {
+public class Indirizzo {
     private String via;
     private String civico;
     private String localita;
@@ -13,7 +13,7 @@ public class Indirizzi {
     private Comune comune;
 
 
-    public Indirizzi(String via, String civico, String localita, String cap, Comune comune) {
+    public Indirizzo(String via, String civico, String localita, String cap, Comune comune) {
         this.via = via;
         this.civico = civico;
         this.localita = localita;
