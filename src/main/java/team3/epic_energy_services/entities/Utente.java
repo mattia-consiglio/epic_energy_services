@@ -1,5 +1,6 @@
 package team3.epic_energy_services.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "utenti")
+@JsonIgnoreProperties({"password", "enabled", "authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "ruolo"})
 public class Utente implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
