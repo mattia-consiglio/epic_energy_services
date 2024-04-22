@@ -19,4 +19,8 @@ public class Ruolo {
     @Setter(value = AccessLevel.NONE)
     private UUID id;
     private String ruolo;
+
+    public Ruolo(String ruolo) {
+        this.ruolo = ruolo;
+    }
 }
