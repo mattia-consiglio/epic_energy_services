@@ -1,4 +1,6 @@
 package team3.epic_energy_services.payloads;
 
-public record StatoFatturaDTO(String stato) {
+import jakarta.validation.constraints.NotBlank;
+
+public record StatoFatturaDTO(@NotBlank(message = "Stato is required") String stato) {
 }

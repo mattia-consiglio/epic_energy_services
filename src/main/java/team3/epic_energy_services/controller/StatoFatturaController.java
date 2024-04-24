@@ -1,8 +1,10 @@
 package team3.epic_energy_services.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.StatoFattura;
+import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.services.StatoFatturaService;
 
 import java.util.List;
@@ -26,13 +28,13 @@ public class StatoFatturaController {
     }
 
     @PostMapping
-    public StatoFattura createStatoFattura(@RequestBody String statoFattura) {
-        return statoFatturaService.createStatoFattura(statoFattura);
+    public StatoFattura createStatoFattura(@Valid @RequestBody StatoFatturaDTO statoFatturaDTO) {
+        return statoFatturaService.createStatoFattura(statoFatturaDTO.stato());
     }
 
     @PutMapping("/{id}")
-    public StatoFattura updateStatoFattura(@PathVariable UUID id, @RequestBody String statoFattura) {
-        return statoFatturaService.updateStatoFattura(id, statoFattura);
+    public StatoFattura updateStatoFattura(@PathVariable UUID id, @Valid @RequestBody StatoFatturaDTO statoFatturaDTO) {
+        return statoFatturaService.updateStatoFattura(id, statoFatturaDTO.stato());
     }
 
     @DeleteMapping("/{id}")
