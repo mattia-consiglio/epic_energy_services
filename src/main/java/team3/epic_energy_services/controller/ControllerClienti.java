@@ -52,4 +52,6 @@ public class ControllerClienti {
     public void eliminaCliente(@PathVariable UUID id) {
         clienteService.eliminaCliente(id);
     }
+
+
 }
