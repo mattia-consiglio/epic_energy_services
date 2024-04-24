@@ -41,14 +41,6 @@ public class IndirizzoController {
         return indirizzoService.add(payload);
     }
 
-    @PostMapping("test")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String test(@RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
-        if (validation.hasErrors()) throw new BadRequestException("Invlaid data", validation.getAllErrors());
-        return testService.test();
-    }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
