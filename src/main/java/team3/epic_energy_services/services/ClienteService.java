@@ -1,14 +1,16 @@
 package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.Cliente;
+import team3.epic_energy_services.entities.Indirizzo;
 import team3.epic_energy_services.entities.TipoRagioneSociale;
 import team3.epic_energy_services.exceptions.ResourceNotFoundException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.repositories.ClienteRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,9 +19,14 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    
+    @Autowired
+    private IndirizzoService indirizzoService;
+
+
     public Cliente creaCliente(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
+        Indirizzo sedeLegale = indirizzoService.findById(clienteDTO.sedeLegaleId());
+        Indirizzo sedeOperativa = indirizzoService.findById(clienteDTO.sedeOperativaId());
         cliente.setRagioneSociale(clienteDTO.ragioneSociale());
         cliente.setPartitaIva(clienteDTO.partitaIva());
         cliente.setEmail(clienteDTO.email());
@@ -28,15 +35,15 @@ public class ClienteService {
         cliente.setEmailContatto(clienteDTO.emailContatto());
         cliente.setNomeContatto(clienteDTO.nomeContatto());
         cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
-
-        cliente.setTipoRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.ragioneSociale()));
-
+        cliente.setSedeLegale(sedeLegale);
+        cliente.setSedeOperativa(sedeOperativa);
+        cliente.setTipoRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.tipoRagioneSociale()));
 
         return clienteRepository.save(cliente);
     }
 
-    public List<Cliente> getClienti() {
-        return clienteRepository.findAll();
+    public Page<Cliente> getClienti(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
     }
 
     public Cliente getClienteById(UUID id) {
@@ -47,20 +54,26 @@ public class ClienteService {
     public Cliente aggiornaCliente(UUID id, ClienteDTO clienteDTO) {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cliente non trovato con id: " + id));
-        cliente.setRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.ragioneSociale()));
+        Indirizzo sedeLegale = indirizzoService.findById(clienteDTO.sedeLegaleId());
+        Indirizzo sedeOperativa = indirizzoService.findById(clienteDTO.sedeOperativaId());
+        cliente.setRagioneSociale(clienteDTO.ragioneSociale());
         cliente.setPartitaIva(clienteDTO.partitaIva());
         cliente.setEmail(clienteDTO.email());
+        cliente.setPec(clienteDTO.pec());
+        cliente.setTelefono(clienteDTO.telefono());
+        cliente.setEmailContatto(clienteDTO.emailContatto());
         cliente.setNomeContatto(clienteDTO.nomeContatto());
-
+        cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
+        cliente.setSedeLegale(sedeLegale);
+        cliente.setSedeOperativa(sedeOperativa);
+        cliente.setTipoRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.tipoRagioneSociale()));
 
         return clienteRepository.save(cliente);
     }
 
     public void eliminaCliente(UUID id) {
-        if (!clienteRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Cliente non trovato con id: " + id);
-        }
-        clienteRepository.deleteById(id);
+
+        clienteRepository.delete(this.getClienteById(id));
     }
 }
 

@@ -15,43 +15,51 @@ import team3.epic_energy_services.services.IndirizzoService;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/address")
+@RequestMapping("api/indirizzi")
 public class IndirizzoController {
 
-   @Autowired
-   private IndirizzoService iS;
+    @Autowired
+    private IndirizzoService indirizzoService;
 
     @GetMapping
-    private Page<Indirizzo> getAllIndirizzo(@RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size,
-                                            @RequestParam(defaultValue = "id") String sort) {
-        return iS.getIndirizzo(page, size, sort);
+    public Page<Indirizzo> getAllIndirizzo(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size,
+                                           @RequestParam(defaultValue = "id") String sort) {
+        return indirizzoService.getIndirizzi(page, size, sort);
     }
 
     @GetMapping("/{id}")
-    private Indirizzo getIndirizzoById(@PathVariable UUID id) {
-        return iS.findById(id);
+    public Indirizzo getIndirizzoById(@PathVariable UUID id) {
+        return indirizzoService.findById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    private Indirizzo saveNewIndirizzo(@RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
-        if (validation.hasErrors()) throw new BadRequestException("invlaid data", validation.getAllErrors());
-        else return iS.save(payload);
+    public Indirizzo saveNewIndirizzo(@RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) throw new BadRequestException("Invlaid data", validation.getAllErrors());
+        return indirizzoService.add(payload);
+    }
+
+    @PostMapping("test")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String test(@RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) throw new BadRequestException("Invlaid data", validation.getAllErrors());
+        return testService.test();
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteIndirizzo(@PathVariable UUID id) {
-        iS.findByIdAndDelete(id);
+    public void deleteIndirizzo(@PathVariable UUID id) {
+        indirizzoService.findByIdAndDelete(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    private Indirizzo updateDevice(@PathVariable UUID id, @RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
+    public Indirizzo updateDevice(@PathVariable UUID id, @RequestBody @Validated IndirizzoDTO payload, BindingResult validation) {
         if (validation.hasErrors()) throw new BadRequestException("invlaid data", validation.getAllErrors());
-        else return iS.findByIdAndUpdate(id, payload);
+        else return indirizzoService.findByIdAndUpdate(id, payload);
     }
 }

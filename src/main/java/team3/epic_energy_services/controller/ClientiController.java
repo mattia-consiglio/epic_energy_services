@@ -1,6 +1,10 @@
 package team3.epic_energy_services.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -11,7 +15,6 @@ import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.services.ClienteService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,8 +36,9 @@ public class ClientiController {
     }
 
     @GetMapping
-    public List<Cliente> getClienti() {
-        return clienteService.getClienti();
+    public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "date") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteService.getClienti(pageable);
     }
 
     @GetMapping("/{id}")
