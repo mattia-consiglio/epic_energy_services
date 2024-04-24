@@ -1,40 +1,42 @@
 package team3.epic_energy_services.payloads;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import team3.epic_energy_services.entities.TypeCustomers;
+import jakarta.validation.constraints.*;
+
+import java.util.UUID;
 
 public record ClienteDTO(
         @NotBlank(message = "Nome is required")
         @Size(min = 3, message = "Name must at least 3 characters long")
-        String nome,
-        @NotBlank(message = "Cognome is required")
-        @Size(min = 3, message = "Surname must at least 3 characters long")
-        String cognome,
+        String ragioneSociale,
+        @NotNull(message = "Partita iva is required")
+        int partitaIva,
         @NotBlank(message = "Email is required")
         @Email
         String email,
-        int partitaIva,
-        TypeCustomers ragioneSocialeEnum
+        @NotBlank(message = "Email is required")
+        @Email
+        String pec,
+        @NotBlank(message = "Telefono is required")
+        String telefono,
+        @NotBlank(message = "Email di contatto is required")
+        @Email
+        String emailContatto,
+        @NotBlank(message = "Nome is required")
+        @Size(min = 3, message = "Nome must at least 3 characters long")
+        String nomeContatto,
+        @NotBlank(message = "Cognome is required")
+        @Size(min = 3, message = "Cognome must at least 3 characters long")
+        String cognomeContatto,
+        @NotBlank(message = "Telefono contatto is required")
+        @Size(min = 10, max = 20, message = "Telefono contatto must between 10 and 20 characters long")
+        String telefonoContatto,
+        @NotNull(message = "ID Sede legale is required")
+        UUID sedeLegaleId,
+        @NotNull(message = "ID Sede operativa is required")
+        UUID sedeOperativaID,
+
+        @NotBlank(message = "Ragione sociale is required")
+        @Pattern(regexp = "PA|SAS|SPA|SRL", message = "Ragione sociale must be one of the following: PA, SAS, SPA, SRL")
+        String tipoRagioneSociale
 ) {
-    public String getNome() {
-        return nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public int getPartitaIva() {
-        return partitaIva;
-    }
-
-    public TypeCustomers getRagioneSocialeEnum() {
-        return ragioneSocialeEnum;
-    }
 }

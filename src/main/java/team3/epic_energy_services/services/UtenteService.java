@@ -26,16 +26,23 @@ public class UtenteService {
         return utenteRepository.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
     }
 
-    public Utente createUtente(UtenteDTO utente) {
+    public Utente createUtente(UtenteDTO utenteDTO) {
+        if (utenteRepository.existsByUsernameOrEmail(utenteDTO.username(), utenteDTO.email())) {
+            throw new BadRequestException("Username and email already in use");
+        } else if (utenteRepository.existsByUsername(utenteDTO.username())) {
+            throw new BadRequestException("Username already in use");
+        } else if (utenteRepository.existsByEmail(utenteDTO.email())) {
+            throw new BadRequestException("Email already in use");
+        }
         Utente newUtente = new Utente();
         Ruolo ruolo = ruoloService.getRuolo("USER");
-        newUtente.setEmail(utente.email());
-        newUtente.setPassword(passwordEncoder.encode(utente.password()));
-        newUtente.setNome(utente.nome());
-        newUtente.setCognome(utente.cognome());
+        newUtente.setEmail(utenteDTO.email());
+        newUtente.setPassword(passwordEncoder.encode(utenteDTO.password()));
+        newUtente.setNome(utenteDTO.nome());
+        newUtente.setCognome(utenteDTO.cognome());
         newUtente.setRuolo(ruolo);
-        newUtente.setUsername(utente.username());
-        String avatarUrl = "https://ui-avatars.com/api/?name=" + utente.nome().charAt(0) + "+" + utente.cognome().charAt(0);
+        newUtente.setUsername(utenteDTO.username());
+        String avatarUrl = "https://ui-avatars.com/api/?name=" + utenteDTO.nome().charAt(0) + "+" + utenteDTO.cognome().charAt(0);
         newUtente.setAvatarUrl(avatarUrl);
         return utenteRepository.save(newUtente);
     }
@@ -92,13 +99,14 @@ public class UtenteService {
         } else if (utenteRepository.existsByEmail(utenteDTO.email()) && !existingUtente.getEmail().equals(utenteDTO.email())) {
             throw new BadRequestException("Email already in use");
         }
+        String avatarUrl = "https://ui-avatars.com/api/?name=" + utenteDTO.nome().charAt(0) + "+" + utenteDTO.cognome().charAt(0);
         existingUtente.setNome(utenteDTO.nome());
         existingUtente.setCognome(utenteDTO.cognome());
         existingUtente.setPassword(passwordEncoder.encode(utenteDTO.password()));
         existingUtente.setEmail(utenteDTO.email());
         existingUtente.setUsername(utenteDTO.username());
-
-
+        existingUtente.setAvatarUrl(avatarUrl);
+        
         return utenteRepository.save(existingUtente);
     }
 }
