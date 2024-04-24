@@ -1,4 +1,4 @@
-package team3.epic_energy_services;
+package team3.epic_energy_services.runners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +8,7 @@ import team3.epic_energy_services.services.RuoloService;
 import team3.epic_energy_services.services.UtenteService;
 
 @Component
-public class InitalRunner implements CommandLineRunner {
+public class UtenteRunner implements CommandLineRunner {
     @Autowired
     private RuoloService ruoloService;
 
