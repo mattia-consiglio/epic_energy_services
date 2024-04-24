@@ -7,14 +7,14 @@ import team3.epic_energy_services.entities.Ruolo;
 import team3.epic_energy_services.entities.Utente;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.UtenteDTO;
-import team3.epic_energy_services.repositories.UtentiInterface;
+import team3.epic_energy_services.repositories.UtenteRepository;
 
 import java.util.UUID;
 
 @Service
 public class UtenteService {
     @Autowired
-    private UtentiInterface utentiInterface;
+    private UtenteRepository utenteRepository;
 
     @Autowired
     private RuoloService ruoloService;
@@ -23,7 +23,7 @@ public class UtenteService {
     private PasswordEncoder passwordEncoder;
 
     public Utente getUtente(UUID id) {
-        return utentiInterface.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
+        return utenteRepository.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
     }
 
     public Utente createUtente(UtenteDTO utente) {
@@ -37,48 +37,68 @@ public class UtenteService {
         newUtente.setUsername(utente.username());
         String avatarUrl = "https://ui-avatars.com/api/?name=" + utente.nome().charAt(0) + "+" + utente.cognome().charAt(0);
         newUtente.setAvatarUrl(avatarUrl);
-        return utentiInterface.save(newUtente);
+        return utenteRepository.save(newUtente);
     }
 
-    public Utente createUtente(UtenteDTO utente, String ruoloString) {
+    public Utente createUtente(UtenteDTO utenteDTO, String ruoloString) {
+        if (utenteRepository.existsByUsernameOrEmail(utenteDTO.username(), utenteDTO.email())) {
+            throw new BadRequestException("Username and email already in use");
+        } else if (utenteRepository.existsByUsername(utenteDTO.username())) {
+            throw new BadRequestException("Username already in use");
+        } else if (utenteRepository.existsByEmail(utenteDTO.email())) {
+            throw new BadRequestException("Email already in use");
+        }
+
         Utente newUtente = new Utente();
+
         Ruolo ruolo = ruoloService.getRuolo(ruoloString);
-        newUtente.setEmail(utente.email());
-        newUtente.setPassword(passwordEncoder.encode(utente.password()));
-        newUtente.setNome(utente.nome());
-        newUtente.setCognome(utente.cognome());
+        newUtente.setEmail(utenteDTO.email());
+        newUtente.setPassword(passwordEncoder.encode(utenteDTO.password()));
+        newUtente.setNome(utenteDTO.nome());
+        newUtente.setCognome(utenteDTO.cognome());
         newUtente.setRuolo(ruolo);
-        newUtente.setUsername(utente.username());
-        String avatarUrl = "https://ui-avatars.com/api/?name=" + utente.nome().charAt(0) + "+" + utente.cognome().charAt(0);
+        newUtente.setUsername(utenteDTO.username());
+        String avatarUrl = "https://ui-avatars.com/api/?name=" + utenteDTO.nome().charAt(0) + "+" + utenteDTO.cognome().charAt(0);
         newUtente.setAvatarUrl(avatarUrl);
-        return utentiInterface.save(newUtente);
+        return utenteRepository.save(newUtente);
     }
 
     public Utente getUtenteByUsernameOrEmail(String userOrEmail) {
-        return utentiInterface.findByUsernameOrEmail(userOrEmail, userOrEmail).orElseThrow(() -> new BadRequestException("Utente not found"));
+        return utenteRepository.findByUsernameOrEmail(userOrEmail, userOrEmail).orElseThrow(() -> new BadRequestException("Utente not found"));
     }
 
     public boolean existsByUsernameOrEmail(String userOrEmail) {
-        return utentiInterface.existsByUsernameOrEmail(userOrEmail, userOrEmail);
+        return utenteRepository.existsByUsernameOrEmail(userOrEmail, userOrEmail);
     }
 
     public boolean existsByUsername(String username) {
-        return utentiInterface.existsByUsername(username);
+        return utenteRepository.existsByUsername(username);
     }
 
     public boolean existsByEmail(String email) {
-        return utentiInterface.existsByEmail(email);
+        return utenteRepository.existsByEmail(email);
     }
 
     public void deleteUtente(UUID id) {
-        utentiInterface.deleteById(id);
+        utenteRepository.deleteById(id);
     }
 
     public Utente updateUtente(UUID id, UtenteDTO utenteDTO) {
-        Utente existingUtente = utentiInterface.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
+        Utente existingUtente = utenteRepository.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
+        if (utenteRepository.existsByUsernameOrEmail(utenteDTO.username(), utenteDTO.email()) && !existingUtente.getUsername().equals(utenteDTO.username()) && !existingUtente.getEmail().equals(utenteDTO.email())) {
+            throw new BadRequestException("Username and email already in use");
+        } else if (utenteRepository.existsByUsername(utenteDTO.username()) && !existingUtente.getUsername().equals(utenteDTO.username())) {
+            throw new BadRequestException("Username already in use");
+        } else if (utenteRepository.existsByEmail(utenteDTO.email()) && !existingUtente.getEmail().equals(utenteDTO.email())) {
+            throw new BadRequestException("Email already in use");
+        }
+        existingUtente.setNome(utenteDTO.nome());
+        existingUtente.setCognome(utenteDTO.cognome());
+        existingUtente.setPassword(passwordEncoder.encode(utenteDTO.password()));
+        existingUtente.setEmail(utenteDTO.email());
+        existingUtente.setUsername(utenteDTO.username());
 
 
-
-        return utentiInterface.save(existingUtente);
+        return utenteRepository.save(existingUtente);
     }
 }
