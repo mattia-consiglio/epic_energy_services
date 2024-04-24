@@ -1,6 +1,9 @@
 package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.Cliente;
 import team3.epic_energy_services.entities.Fattura;
@@ -23,6 +26,7 @@ public class FatturaService {
     private final FattureInterface fattureInterface;
     private final StatoFatturaRepository statoFatturaRepository;
     private final ClienteRepository clienteRepository;
+
 
     @Autowired
     public FatturaService(FattureInterface fattureInterface, StatoFatturaRepository statoFatturaRepository, ClienteRepository clienteRepository) {
@@ -75,11 +79,12 @@ public class FatturaService {
         fattureInterface.delete(existingFattura);
     }
 
-    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(String cliente, StatoFattura stato, LocalDate startDate, LocalDate endDate, BigDecimal minImporto, BigDecimal maxImporto) {
-        return fattureInterface.findAll((root, query, cb) -> {
+    public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, BigDecimal minImporto, BigDecimal maxImporto) {
+
+        return (root, query, cb) -> {
             Predicate p = cb.conjunction();
-            if (cliente != null) {
-                p = cb.and(p, cb.equal(root.get("cliente"), cliente));
+            if (clienteId != null) {
+                p = cb.and(p, cb.equal(root.get("cliente").get("id"), clienteId));
             }
             if (stato != null) {
                 p = cb.and(p, cb.equal(root.get("stato"), stato));
@@ -91,7 +96,15 @@ public class FatturaService {
                 p = cb.and(p, cb.between(root.get("importo"), minImporto, maxImporto));
             }
             return p;
-        });
+        };
     }
 
+    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, BigDecimal minImporto, BigDecimal maxImporto) {
+        Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto);
+        return fattureInterface.findAll(spec);
+    }
+
+    public List<Fattura> getFatturaByYear(Integer year) {
+        return fattureInterface.findFatturaByYear(year);
+    }
 }

@@ -51,12 +51,18 @@ public class FatturaController {
 
     @GetMapping("/filter")
     public List<Fattura> getFatturaByClienteStatoDataRangeImporto(
-            @RequestParam(required = false) String cliente,
+            @RequestParam(required = false) UUID clienteId,
             @RequestParam(required = false) StatoFattura stato,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) BigDecimal minImporto,
-            @RequestParam(required = false) BigDecimal maxImporto) {
-        return fatturaService.getFatturaByClienteStatoDataRangeImporto(cliente, stato, startDate, endDate, minImporto, maxImporto);
+            @RequestParam(required = false) BigDecimal maxImporto)
+           {
+        return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto);
+    }
+
+    @GetMapping("/year/{year}")
+    public List<Fattura> getFatturaByYear(@PathVariable Integer year) {
+        return fatturaService.getFatturaByYear(year);
     }
 }

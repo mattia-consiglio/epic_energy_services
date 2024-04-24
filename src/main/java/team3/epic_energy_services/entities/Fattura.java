@@ -31,6 +31,6 @@ public class Fattura {
     private Cliente cliente;
 
     public void setDataEmissione(LocalDate localDate) {
-        LocalDate data = LocalDate.now();
+        this.data_emissione = localDate;
     }
 }
