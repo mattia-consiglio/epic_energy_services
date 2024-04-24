@@ -19,8 +19,10 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
     private UUID id;
+
     @Enumerated(EnumType.STRING)
     private TypeCustomers ragioneSociale;
+
     private int partitaIva;
     private String email;
     private LocalDate dataInserimento;
@@ -33,9 +35,11 @@ public class Cliente {
     private String cognomeContatto;
     private String telefonoContatto;
     private String logoAziendale;
+
     @ManyToOne
     @JoinColumn(name = "sede_legale_id")
     private Indirizzo sedeLegale;
+
     @ManyToOne
     @JoinColumn(name = "sede_operativa_id")
     private Indirizzo sedeOperativa;
@@ -58,3 +62,4 @@ public class Cliente {
         this.sedeOperativa = sedeOperativa;
     }
 }
+
