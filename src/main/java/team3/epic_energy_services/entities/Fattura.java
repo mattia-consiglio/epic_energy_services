@@ -29,4 +29,8 @@ public class Fattura {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+
+    public void setDataEmissione(LocalDate localDate) {
+        LocalDate data = LocalDate.now();
+    }
 }

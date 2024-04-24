@@ -19,4 +19,6 @@ public class StatoFattura {
     @Setter(value = AccessLevel.NONE)
     private UUID id;
     private String stato;
+
+
 }
