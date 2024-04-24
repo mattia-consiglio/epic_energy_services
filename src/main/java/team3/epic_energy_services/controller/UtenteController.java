@@ -1,0 +1,35 @@
+package team3.epic_energy_services.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import team3.epic_energy_services.entities.Utente;
+import team3.epic_energy_services.exceptions.BadRequestException;
+import team3.epic_energy_services.payloads.UtenteDTO;
+import team3.epic_energy_services.services.UtenteService;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("api/utenti")
+public class UtenteController {
+
+    @Autowired
+    private UtenteService utenteService;
+
+    @PutMapping("/{id}")
+    public Utente updateUtente(@PathVariable UUID id, @RequestBody @Validated UtenteDTO utenteDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new BadRequestException("Invalid data", validation.getAllErrors());
+        }
+        return utenteService.updateUtente(id, utenteDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUtente(@PathVariable UUID id) {
+        utenteService.deleteUtente(id);
+    }
+}
