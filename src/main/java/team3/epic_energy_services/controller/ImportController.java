@@ -6,23 +6,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team3.epic_energy_services.payloads.GeneralMessageDTO;
+import team3.epic_energy_services.services.ComuneService;
 import team3.epic_energy_services.services.ProvinciaService;
 
 @RestController
 @RequestMapping("api/import")
-public class ProvinciaController {
+public class ImportController {
     @Autowired
     private ProvinciaService provinciaService;
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public GeneralMessageDTO importAll() {
-        return provinciaService.importProvince();
-    }
+    @Autowired
+    private ComuneService comuneService;
 
-    @GetMapping("provincie")
+    @GetMapping("province")
     @PreAuthorize("hasAuthority('ADMIN')")
     public GeneralMessageDTO importProvincie() {
         return provinciaService.importProvince();
+    }
+
+    @GetMapping("comuni")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public GeneralMessageDTO importComuni() {
+        return comuneService.importComuni();
     }
 }

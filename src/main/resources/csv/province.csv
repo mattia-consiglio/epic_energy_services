@@ -36,7 +36,7 @@ FM;Fermo;Marche
 FE;Ferrara;Emilia Romagna
 FI;Firenze;Toscana
 FG;Foggia;Puglia
-FC;Forli-Cesena;Emilia Romagna
+FC;Forlì-Cesena;Emilia Romagna
 FR;Frosinone;Lazio
 GE;Genova;Liguria
 GO;Gorizia;Friuli Venezia Giulia
@@ -109,3 +109,5 @@ VR;Verona;Veneto
 VV;Vibo-Valentia;Calabria
 VI;Vicenza;Veneto
 VT;Viterbo;Lazio
+SU;Sud Sardegna;Sardegna
+VB;Verbano-Cusio-Ossola;Piemonte

@@ -19,13 +19,15 @@ public class Provincia {
     @Setter(value = AccessLevel.NONE)
     private UUID id;
     @Column(unique = true)
-    private String nome;
     private String sigla;
+    private String nome;
+    private String regione;
 
 
-    public Provincia(String nome, String sigla) {
+    public Provincia(String sigla, String nome, String regione) {
         this.nome = nome;
         this.sigla = sigla;
+        this.regione = regione;
     }
 
 

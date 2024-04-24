@@ -2,10 +2,11 @@ package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team3.epic_energy_services.entities.Comune;
 import team3.epic_energy_services.entities.Provincia;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.GeneralMessageDTO;
-import team3.epic_energy_services.repositories.ProvinciaRepository;
+import team3.epic_energy_services.repositories.ComuneRepository;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,39 +16,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProvinciaService {
+public class ComuneService {
     @Autowired
-    private ProvinciaRepository provinciaRepository;
+    private ComuneRepository comuneRepository;
     private static final String COMMA_DELIMITER = ";";
 
+    @Autowired
+    private ProvinciaService provinciaService;
 
-    public void addProvincia(Provincia newProvincia) {
-        Provincia provincia = provinciaRepository.findByNomeIgnoreCase(newProvincia.getNome()).orElse(null);
-        if (provincia == null) {
-            provincia = newProvincia;
+
+    public void addComune(Comune newComune) {
+        Comune comune = comuneRepository.findByNomeIgnoreCase(newComune.getNome()).orElse(null);
+        if (comune == null) {
+            comune = newComune;
         }
-        provinciaRepository.save(provincia);
+        comuneRepository.save(comune);
     }
 
-    public Provincia getProvincia(String nome) {
-        Provincia provincia = provinciaRepository.findByNomeIgnoreCase(nome).orElse(null);
-        if (provincia == null) {
-            throw new BadRequestException("Provincia not found: " + nome);
-        }
-        return provincia;
+    public List<Comune> getAllComuni() {
+        return comuneRepository.findAll();
     }
 
-
-    public List<Provincia> getAllProvince() {
-        return provinciaRepository.findAll();
-    }
-
-
-    public GeneralMessageDTO importProvince() {
+    public GeneralMessageDTO importComuni() {
 
         String dir = Paths.get("").toAbsolutePath().toString();
+        System.out.println(dir);
         List<List<String>> records = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(dir + "/src/main/resources/csv/province.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(dir + "/src/main/resources/csv/comuni.csv"))) {
             String line;
             int count = 0;
             int headerCount = 1;
@@ -59,12 +54,19 @@ public class ProvinciaService {
                     continue;
                 }
                 if (values.length == headerCount) {
-                    this.addProvincia(new Provincia(values[0], values[1], values[2]));
+
+                    Provincia provincia = null;
+                    try {
+                        provincia = provinciaService.getProvincia(values[3]);
+                        this.addComune(new Comune(values[2], provincia));
+                    } catch (BadRequestException e) {
+                        System.err.println(e.getMessage());
+                    }
                 } else {
                     System.err.printf("Invalid record found at line %s. Expected %s columns but found %s columns %n", count, headerCount, values.length);
                 }
             }
-            return new GeneralMessageDTO("Province imported successfully");
+            return new GeneralMessageDTO("Comuni imported successfully.");
         } catch (IOException e) {
             throw new BadRequestException(e.getMessage());
         }
