@@ -2,9 +2,11 @@ package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team3.epic_energy_services.entities.Cliente;
 import team3.epic_energy_services.entities.Comune;
 import team3.epic_energy_services.entities.Provincia;
 import team3.epic_energy_services.exceptions.BadRequestException;
+import team3.epic_energy_services.exceptions.ResourceNotFoundException;
 import team3.epic_energy_services.payloads.GeneralMessageDTO;
 import team3.epic_energy_services.repositories.ComuneRepository;
 
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ComuneService {
@@ -24,6 +27,10 @@ public class ComuneService {
     @Autowired
     private ProvinciaService provinciaService;
 
+    public Comune getComuneById(UUID id) {
+        return comuneRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comune non trovato con id: " + id));
+    }
 
     public void addComune(Comune newComune) {
         Comune comune = comuneRepository.findByNomeIgnoreCase(newComune.getNome()).orElse(null);
