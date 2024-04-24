@@ -1,8 +1,6 @@
 package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.Ruolo;
@@ -24,14 +22,9 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Page<Utente> getUtenti(Pageable pageable) {
-        return utentiInterface.findAll(pageable);
-    }
-
     public Utente getUtente(UUID id) {
         return utentiInterface.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
     }
-
 
     public Utente createUtente(UtenteDTO utente) {
         Utente newUtente = new Utente();
@@ -75,5 +68,17 @@ public class UtenteService {
 
     public boolean existsByEmail(String email) {
         return utentiInterface.existsByEmail(email);
+    }
+
+    public void deleteUtente(UUID id) {
+        utentiInterface.deleteById(id);
+    }
+
+    public Utente updateUtente(UUID id, UtenteDTO utenteDTO) {
+        Utente existingUtente = utentiInterface.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
+
+
+
+        return utentiInterface.save(existingUtente);
     }
 }
