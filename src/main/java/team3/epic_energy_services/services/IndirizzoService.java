@@ -1,5 +1,6 @@
 package team3.epic_energy_services.services;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,34 +18,35 @@ import java.util.UUID;
 public class IndirizzoService {
 
     @Autowired
-    private IndirizzoRepository iR;
+    private IndirizzoRepository indirizzoRepository;
+
 
     @Autowired
-    private ComuneService cS;
+    private ComuneService comuneService;
 
-    public Page<Indirizzo> getIndirizzo(int page, int size, String sortBy) {
+    public Page<Indirizzo> getIndirizzi(int page, int size, String sortBy) {
         if (size > 50) size = 50;
         Pageable p = PageRequest.of(page, size, Sort.by(sortBy));
-        return iR.findAll(p);
+        return indirizzoRepository.findAll(p);
     }
 
-    public Indirizzo save(IndirizzoDTO newIndirizzo) {
-        return iR.save(new Indirizzo(
+    public Indirizzo add(IndirizzoDTO newIndirizzo) {
+        return indirizzoRepository.save(new Indirizzo(
                 newIndirizzo.via(),
                 newIndirizzo.civico(),
                 newIndirizzo.localita(),
                 newIndirizzo.cap(),
-                cS.getComuneById(newIndirizzo.comune())
+                comuneService.getComuneById(newIndirizzo.comune())
         ));
     }
 
     public Indirizzo findById(UUID id) {
-        return this.iR.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
+        return this.indirizzoRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
     public void findByIdAndDelete(UUID id) {
         Indirizzo found = this.findById(id);
-        this.iR.delete(found);
+        this.indirizzoRepository.delete(found);
     }
 
     public Indirizzo findByIdAndUpdate(UUID id, IndirizzoDTO newIndirizzo) {
@@ -53,7 +55,7 @@ public class IndirizzoService {
         found.setCivico(newIndirizzo.civico());
         found.setLocalita(newIndirizzo.localita());
         found.setCap(newIndirizzo.cap());
-        iR.save(found);
+        indirizzoRepository.save(found);
         return found;
     }
 

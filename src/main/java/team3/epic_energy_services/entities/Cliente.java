@@ -20,21 +20,21 @@ public class Cliente {
     @Setter(value = AccessLevel.NONE)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private TypeCustomers ragioneSociale;
-
+    private String ragioneSociale;
     private int partitaIva;
     private String email;
-    private LocalDate dataInserimento;
-    private LocalDate dataUltimoContatto;
-    private double fatturatoAnnuale;
+    private LocalDate dataInserimento = LocalDate.now();
+    private LocalDate dataUltimoContatto = LocalDate.now();
+    private double fatturatoAnnuale = 0;
     private String pec;
-    private int telefono;
+    private String telefono;
     private String emailContatto;
     private String nomeContatto;
     private String cognomeContatto;
     private String telefonoContatto;
     private String logoAziendale;
+    @Enumerated(EnumType.STRING)
+    private TipoRagioneSociale tipoRagioneSociale;
 
     @ManyToOne
     @JoinColumn(name = "sede_legale_id")
@@ -44,22 +44,6 @@ public class Cliente {
     @JoinColumn(name = "sede_operativa_id")
     private Indirizzo sedeOperativa;
 
-    public Cliente(TypeCustomers ragioneSociale, int partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, double fatturatoAnnuale, String pec, int telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, String logoAziendale, Indirizzo sedeLegale, Indirizzo sedeOperativa) {
-        this.ragioneSociale = ragioneSociale;
-        this.partitaIva = partitaIva;
-        this.email = email;
-        this.dataInserimento = dataInserimento;
-        this.dataUltimoContatto = dataUltimoContatto;
-        this.fatturatoAnnuale = fatturatoAnnuale;
-        this.pec = pec;
-        this.telefono = telefono;
-        this.emailContatto = emailContatto;
-        this.nomeContatto = nomeContatto;
-        this.cognomeContatto = cognomeContatto;
-        this.telefonoContatto = telefonoContatto;
-        this.logoAziendale = logoAziendale;
-        this.sedeLegale = sedeLegale;
-        this.sedeOperativa = sedeOperativa;
-    }
+
 }
 

@@ -1,6 +1,11 @@
 package team3.epic_energy_services.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.Fattura;
 import team3.epic_energy_services.entities.StatoFattura;
@@ -30,11 +35,13 @@ public class FatturaController {
     }
 
     @GetMapping
-    public Fattura getAllFatture() {
-        return (Fattura) fatturaService.getAllFatture();
+    public Page<Fattura> getAllFatture(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "date") String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return fatturaService.getAllFatture(pageable);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Fattura createFattura(@RequestBody FatturaDTO fattura) {
         return fatturaService.createFattura(fattura);
     }
@@ -45,6 +52,7 @@ public class FatturaController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFattura(@PathVariable UUID id) {
         fatturaService.deleteFattura(id);
     }
@@ -56,8 +64,7 @@ public class FatturaController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) BigDecimal minImporto,
-            @RequestParam(required = false) BigDecimal maxImporto)
-           {
+            @RequestParam(required = false) BigDecimal maxImporto) {
         return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto);
     }
 
