@@ -18,6 +18,7 @@ public class Comune {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
     private UUID id;
+    @Column(unique = true)
     private String nome;
     @ManyToOne
     @JoinColumn(name = "provincia_id")

@@ -18,13 +18,16 @@ public class Provincia {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
     private UUID id;
-    private String nome;
+    @Column(unique = true)
     private String sigla;
+    private String nome;
+    private String regione;
 
 
-    public Provincia(String nome, String sigla) {
+    public Provincia(String sigla, String nome, String regione) {
         this.nome = nome;
         this.sigla = sigla;
+        this.regione = regione;
     }
 
 
