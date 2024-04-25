@@ -1,6 +1,7 @@
 package team3.epic_energy_services.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,13 @@ public class UtenteController {
 
     @Autowired
     private UtenteService utenteService;
+
+
+    @GetMapping
+    public Page<Utente> getAllUtenti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sort) {
+        return utenteService.getUtenti(page, size, sort);
+    }
+
 
     @PutMapping("/{id}")
     public Utente updateUtente(@PathVariable UUID id, @RequestBody @Validated UtenteDTO utenteDTO, BindingResult validation) {

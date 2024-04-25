@@ -36,7 +36,7 @@ public class ClientiController {
     }
 
     @GetMapping
-    public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "date") String sort) {
+    public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataUltimoContatto") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return clienteService.getClienti(pageable);
     }
