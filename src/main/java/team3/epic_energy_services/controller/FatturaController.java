@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.Fattura;
 import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.payloads.FatturaDTO;
+import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.services.FatturaService;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/fattura")
+@RequestMapping("api/fatture")
 public class FatturaController {
 
     @Autowired
@@ -46,9 +47,9 @@ public class FatturaController {
         return fatturaService.createFattura(fattura);
     }
 
-    @PutMapping
-    public Fattura updateFattura(@RequestBody FatturaDTO fattura) {
-        return fatturaService.updateFattura(fattura);
+    @PutMapping("{id}")
+    public Fattura updateFattura(@PathVariable UUID id, @RequestBody StatoFatturaDTO fattura) {
+        return fatturaService.updateStatoFattura(id, fattura);
     }
 
     @DeleteMapping("/{id}")

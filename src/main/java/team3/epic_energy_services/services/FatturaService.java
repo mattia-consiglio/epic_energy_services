@@ -11,9 +11,8 @@ import team3.epic_energy_services.entities.Fattura;
 import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.FatturaDTO;
-import team3.epic_energy_services.repositories.ClienteRepository;
+import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.repositories.FattureInterface;
-import team3.epic_energy_services.repositories.StatoFatturaRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,15 +23,15 @@ import java.util.UUID;
 @Service
 public class FatturaService {
     private final FattureInterface fattureInterface;
-    private final StatoFatturaRepository statoFatturaRepository;
-    private final ClienteRepository clienteRepository;
+    private final StatoFatturaService statoFatturaService;
+    private final ClienteService clienteService;
 
 
     @Autowired
-    public FatturaService(FattureInterface fattureInterface, StatoFatturaRepository statoFatturaRepository, ClienteRepository clienteRepository) {
+    public FatturaService(FattureInterface fattureInterface, StatoFatturaService statoFatturaService, ClienteService clienteService) {
         this.fattureInterface = fattureInterface;
-        this.statoFatturaRepository = statoFatturaRepository;
-        this.clienteRepository = clienteRepository;
+        this.statoFatturaService = statoFatturaService;
+        this.clienteService = clienteService;
     }
 
     public Fattura getFattura(UUID id) {
@@ -52,25 +51,20 @@ public class FatturaService {
         newFattura.setNumero(fattura.numero());
         newFattura.setDataEmissione(fattura.data_emissione());
         newFattura.setImporto(fattura.importo());
-        StatoFattura statoFattura = statoFatturaRepository.findById(fattura.statoId())
-                .orElseThrow(() -> new BadRequestException("StatoFattura not found"));
+        StatoFattura statoFattura = statoFatturaService.getStatoFatturaByStato("NON_PAGATA");
         newFattura.setStato(statoFattura);
-        Cliente cliente = clienteRepository.findById(fattura.clienteId())
-                .orElseThrow(() -> new BadRequestException("Cliente not found"));
+        Cliente cliente = clienteService.getClienteById(fattura.clienteId());
+        cliente = clienteService.updateDataUltimoContatto(cliente);
+        cliente = clienteService.updateFatturatoAnnuale(cliente, newFattura.getImporto());
         newFattura.setCliente(cliente);
         return fattureInterface.save(newFattura);
     }
+    
 
-    public Fattura updateFattura(FatturaDTO fattura) {
-        Fattura existingFattura = getFatturaByNumero(fattura.numero());
-        existingFattura.setDataEmissione(fattura.data_emissione());
-        existingFattura.setImporto(fattura.importo());
-        StatoFattura statoFattura = statoFatturaRepository.findById(fattura.statoId())
-                .orElseThrow(() -> new BadRequestException("StatoFattura not found"));
+    public Fattura updateStatoFattura(UUID id, StatoFatturaDTO statoFatturaDTO) {
+        Fattura existingFattura = this.getFattura(id);
+        StatoFattura statoFattura = statoFatturaService.getStatoFatturaByStato(statoFatturaDTO.stato());
         existingFattura.setStato(statoFattura);
-        Cliente cliente = clienteRepository.findById(fattura.clienteId())
-                .orElseThrow(() -> new BadRequestException("Cliente not found"));
-        existingFattura.setCliente(cliente);
         return fattureInterface.save(existingFattura);
     }
 

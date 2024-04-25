@@ -13,6 +13,7 @@ import team3.epic_energy_services.exceptions.ResourceNotFoundException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.repositories.ClienteRepository;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -86,6 +87,16 @@ public class ClienteService {
     public void eliminaCliente(UUID id) {
 
         clienteRepository.delete(this.getClienteById(id));
+    }
+
+    public Cliente updateDataUltimoContatto(Cliente cliente) {
+        cliente.setDataUltimoContatto(LocalDate.now());
+        return clienteRepository.save(cliente);
+    }
+
+    public Cliente updateFatturatoAnnuale(Cliente cliente, double fatturato) {
+        cliente.setFatturatoAnnuale(cliente.getFatturatoAnnuale() + fatturato);
+        return clienteRepository.save(cliente);
     }
 }
 
