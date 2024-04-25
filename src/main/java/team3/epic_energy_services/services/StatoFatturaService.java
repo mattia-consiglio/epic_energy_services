@@ -3,6 +3,7 @@ package team3.epic_energy_services.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.StatoFattura;
+import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.repositories.StatoFatturaRepository;
 
 import java.util.List;
@@ -45,4 +46,7 @@ public class StatoFatturaService {
         return statoFatturaRepository.save(existingStatoFattura);
     }
 
+    public StatoFattura getStatoFatturaByStato(String stato) {
+        return statoFatturaRepository.findByStato(stato).orElseThrow(() -> new BadRequestException("StatoFattura not found"));
+    }
 }
