@@ -12,9 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-import team3.epic_energy_services.entities.User;
+import team3.epic_energy_services.entities.Utente;
 import team3.epic_energy_services.exceptions.UnauthorizedException;
-import team3.epic_energy_services.services.UserService;
+import team3.epic_energy_services.services.UtenteService;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private JWTTools jwtTools;
 
     @Autowired
-    private UserService userService;
+    private UtenteService utenteService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,8 +35,8 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorizationHeader.substring(7);
         jwtTools.validateToken(token);
         String subject = jwtTools.getSubjectFromToken(token);
-        User user = userService.getUser(UUID.fromString(subject));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        Utente utente = utenteService.getUtente(UUID.fromString(subject));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(utente, null, utente.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
@@ -44,6 +44,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return new AntPathMatcher().match("/api/v1/auth/**", request.getServletPath());
+        return new AntPathMatcher().match("/api/auth/**", request.getServletPath());
     }
 }

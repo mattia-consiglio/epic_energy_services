@@ -33,3 +33,6 @@ build/
 .vscode/
 
 env.properties
+
+epic_energy_services.log
+epic_energy_services.log.*.gz

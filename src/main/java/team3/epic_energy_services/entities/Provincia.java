@@ -12,22 +12,24 @@ import java.util.UUID;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "comuni")
-public class Comune {
+@Table(name = "province")
+public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
     private UUID id;
     @Column(unique = true)
+    private String sigla;
     private String nome;
-    @ManyToOne
-    @JoinColumn(name = "provincia_id")
-    private Provincia provincia;
+    private String regione;
 
-    public Comune(String nome, Provincia provincia) {
+
+    public Provincia(String sigla, String nome, String regione) {
         this.nome = nome;
-        this.provincia = provincia;
+        this.sigla = sigla;
+        this.regione = regione;
     }
 
 
 }
+
