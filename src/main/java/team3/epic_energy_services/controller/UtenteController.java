@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,7 @@ public class UtenteController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Utente updateUtente(@PathVariable UUID id, @RequestBody @Validated UtenteDTO utenteDTO, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new BadRequestException("Invalid data", validation.getAllErrors());
@@ -38,16 +38,9 @@ public class UtenteController {
         return utenteService.updateUtente(id, utenteDTO);
     }
 
-    @PutMapping("/me")
-    public Utente updateUtente(@AuthenticationPrincipal Utente utente, @RequestBody @Validated UtenteDTO utenteDTO, BindingResult validation) {
-        if (validation.hasErrors()) {
-            throw new BadRequestException("Invalid data", validation.getAllErrors());
-        }
-        return utenteService.updateUtente(utente.getId(), utenteDTO);
-    }
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUtente(@PathVariable UUID id) {
         utenteService.deleteUtente(id);
     }

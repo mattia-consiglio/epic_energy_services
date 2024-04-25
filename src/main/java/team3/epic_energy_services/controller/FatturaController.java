@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.Fattura;
 import team3.epic_energy_services.entities.StatoFattura;
@@ -43,17 +44,20 @@ public class FatturaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Fattura createFattura(@RequestBody FatturaDTO fattura) {
         return fatturaService.createFattura(fattura);
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Fattura updateFattura(@PathVariable UUID id, @RequestBody StatoFatturaDTO fattura) {
         return fatturaService.updateStatoFattura(id, fattura);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteFattura(@PathVariable UUID id) {
         fatturaService.deleteFattura(id);
     }
