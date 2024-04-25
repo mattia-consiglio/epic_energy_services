@@ -1,6 +1,10 @@
 package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.Ruolo;
@@ -24,6 +28,11 @@ public class UtenteService {
 
     public Utente getUtente(UUID id) {
         return utenteRepository.findById(id).orElseThrow(() -> new BadRequestException("Utente not found"));
+    }
+
+    public Page<Utente> getUtenti(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return utenteRepository.findAll(pageable);
     }
 
     public Utente createUtente(UtenteDTO utenteDTO) {
@@ -106,7 +115,7 @@ public class UtenteService {
         existingUtente.setEmail(utenteDTO.email());
         existingUtente.setUsername(utenteDTO.username());
         existingUtente.setAvatarUrl(avatarUrl);
-        
+
         return utenteRepository.save(existingUtente);
     }
 }

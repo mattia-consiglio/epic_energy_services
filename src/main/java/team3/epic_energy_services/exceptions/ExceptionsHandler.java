@@ -1,6 +1,7 @@
 package team3.epic_energy_services.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -72,6 +73,12 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleIllegalArgumentException(IllegalArgumentException e) {
         return new ErrorDTO(e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handlePropertyReferenceException(PropertyReferenceException e) {
+        return new ErrorDTO("The property " + e.getPropertyName() + " is not valid", LocalDateTime.now());
     }
 
     @ExceptionHandler(MissingPathVariableException.class)

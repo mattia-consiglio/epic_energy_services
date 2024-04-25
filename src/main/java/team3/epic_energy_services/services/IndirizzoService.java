@@ -41,7 +41,7 @@ public class IndirizzoService {
     }
 
     public Indirizzo findById(UUID id) {
-        return this.indirizzoRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id));
+        return this.indirizzoRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Indirizzo", id));
     }
 
     public void findByIdAndDelete(UUID id) {

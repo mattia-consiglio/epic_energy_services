@@ -46,7 +46,6 @@ public class ClienteService {
         cliente.setSedeOperativa(sedeOperativa);
         cliente.setTipoRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.tipoRagioneSociale()));
         String logoUrl = "https://ui-avatars.com/api/?name=" + clienteDTO.ragioneSociale().charAt(0);
-
         cliente.setLogoAziendale(logoUrl);
 
         return clienteRepository.save(cliente);
@@ -73,10 +72,13 @@ public class ClienteService {
         cliente.setTelefono(clienteDTO.telefono());
         cliente.setEmailContatto(clienteDTO.emailContatto());
         cliente.setNomeContatto(clienteDTO.nomeContatto());
+        cliente.setCognomeContatto(clienteDTO.cognomeContatto());
         cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
         cliente.setSedeLegale(sedeLegale);
         cliente.setSedeOperativa(sedeOperativa);
         cliente.setTipoRagioneSociale(TipoRagioneSociale.valueOf(clienteDTO.tipoRagioneSociale()));
+        String logoUrl = "https://ui-avatars.com/api/?name=" + clienteDTO.ragioneSociale().charAt(0);
+        cliente.setLogoAziendale(logoUrl);
 
         return clienteRepository.save(cliente);
     }
