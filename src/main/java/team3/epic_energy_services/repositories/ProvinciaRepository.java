@@ -12,4 +12,6 @@ public interface ProvinciaRepository extends JpaRepository<Provincia, UUID> {
     boolean existsByNomeIgnoreCase(String nome);
 
     Optional<Provincia> findByNomeIgnoreCase(String nome);
+
+    long count();
 }

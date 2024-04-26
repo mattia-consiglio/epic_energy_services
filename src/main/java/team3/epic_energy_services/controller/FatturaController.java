@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +12,9 @@ import team3.epic_energy_services.entities.Fattura;
 import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.payloads.FatturaDTO;
 import team3.epic_energy_services.payloads.StatoFatturaDTO;
-import team3.epic_energy_services.repositories.FattureInterface;
 import team3.epic_energy_services.services.FatturaService;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,9 +23,6 @@ public class FatturaController {
 
     @Autowired
     private FatturaService fatturaService;
-
-    @Autowired
-    FattureInterface fattureInterface;
 
     @GetMapping("/{id}")
     public Fattura getFattura(@PathVariable UUID id) {
@@ -76,16 +70,5 @@ public class FatturaController {
         fatturaService.deleteFattura(id);
     }
 
-//    @GetMapping("/filter")
-//    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(
-//            @RequestParam(required = false) UUID clienteId,
-//            @RequestParam(required = false) StatoFattura stato,
-//            @RequestParam(required = false) LocalDate startDate,
-//            @RequestParam(required = false) LocalDate endDate,
-//            @RequestParam(required = false) Double minImporto,
-//            @RequestParam(required = false) Double maxImporto,
-//            @RequestParam(required = false) Integer year) {
-//        return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto, year);
-//    }
 
 }
