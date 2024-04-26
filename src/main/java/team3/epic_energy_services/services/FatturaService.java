@@ -99,9 +99,9 @@ public class FatturaService {
         };
     }
 
-    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year) {
+    public Page<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year, Pageable pageable) {
         Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto, year);
-        return fattureInterface.findAll(spec);
+        return fattureInterface.findAll(spec, pageable);
     }
 
 }

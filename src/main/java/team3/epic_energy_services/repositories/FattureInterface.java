@@ -1,5 +1,7 @@
 package team3.epic_energy_services.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,7 @@ public interface FattureInterface extends JpaRepository<Fattura, UUID> {
 
     List<Fattura> findByCliente_Id(UUID id);
 
-    List<Fattura> findAll(Specification<Fattura> spec);
+    Page<Fattura> findAll(Specification<Fattura> spec, Pageable pageable);
+
 
 }
