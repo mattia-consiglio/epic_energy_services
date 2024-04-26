@@ -68,12 +68,9 @@ public class FatturaController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) Double minImporto,
-            @RequestParam(required = false) Double maxImporto) {
-        return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto);
+            @RequestParam(required = false) Double maxImporto,
+            @RequestParam(required = false) Integer year) {
+        return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto, year);
     }
 
-    @GetMapping("/year/{year}")
-    public List<Fattura> getFatturaByYear(@PathVariable Integer year) {
-        return fatturaService.getFatturaByYear(year);
-    }
 }

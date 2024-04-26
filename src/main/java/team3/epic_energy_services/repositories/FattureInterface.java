@@ -19,6 +19,4 @@ public interface FattureInterface extends JpaRepository<Fattura, UUID> {
 
     List<Fattura> findAll(Specification<Fattura> spec);
 
-    @Query(value = "SELECT * FROM Fatture f WHERE EXTRACT(YEAR FROM f.dataEmissione) = :year", nativeQuery = true)
-    List<Fattura> findFatturaByYear(@Param("year") Integer year);
 }
