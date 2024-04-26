@@ -1,8 +1,11 @@
 package team3.epic_energy_services.services;
 
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,23 +19,27 @@ import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.repositories.FattureInterface;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 
 @Service
 public class FatturaService {
-    private final FattureInterface fattureInterface;
-    private final StatoFatturaService statoFatturaService;
-    private final ClienteService clienteService;
-
-
     @Autowired
-    public FatturaService(FattureInterface fattureInterface, StatoFatturaService statoFatturaService, ClienteService clienteService) {
-        this.fattureInterface = fattureInterface;
-        this.statoFatturaService = statoFatturaService;
-        this.clienteService = clienteService;
+    private FattureInterface fattureInterface;
+    @Autowired
+    private StatoFatturaService statoFatturaService;
+    @Autowired
+    private ClienteService clienteService;
+
+
+    private String mailgunApiKey;
+
+    private String mailgunDomain;
+
+    public FatturaService(@Value("${mailgun.apikey}") String mailgunApiKey, @Value("${mailgun.domain}") String mailgunDomain) {
+        this.mailgunApiKey = mailgunApiKey;
+        this.mailgunDomain = mailgunDomain;
     }
 
     public Fattura getFattura(UUID id) {
@@ -58,7 +65,21 @@ public class FatturaService {
         cliente = clienteService.updateDataUltimoContatto(cliente);
         cliente = clienteService.updateFatturatoAnnuale(cliente, newFattura.getImporto());
         newFattura.setCliente(cliente);
+        this.sendEmail(newFattura);
         return fattureInterface.save(newFattura);
+    }
+
+    public void sendEmail(Fattura fattura) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.mailgunDomain + "/messages")
+                .basicAuth("api", this.mailgunApiKey)
+                .queryString("from", "info@" + this.mailgunDomain)
+                .queryString("to", fattura.getCliente().getEmail())
+                .queryString("subject", "Emessa fattura numero " + fattura.getNumero())
+                .queryString("text", "Spett.le " + fattura.getCliente().getRagioneSociale() + ",\n" + "La fattura numero " + fattura.getNumero() + " è stata emessa in data " + fattura.getDataEmissione().format(formatter) + ".\nCordiali saluti Epic Energy Services.")
+                .queryString("html", "<html><body><p>Spett.le " + fattura.getCliente().getRagioneSociale() + ",</p><p>La fattura numero <b>" + fattura.getNumero() + "</b> è stata emessa in data " + fattura.getDataEmissione().format(formatter) + ".</p><p>Cordiali saluti Epic Energy Services.</p></body></html>")
+                .asJson();
     }
 
 
