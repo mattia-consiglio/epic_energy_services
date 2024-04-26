@@ -19,7 +19,8 @@ public class Fattura {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(value = AccessLevel.NONE)
     private UUID id;
-    private LocalDate data_emissione;
+    @Column(name = "data_emissione")
+    private LocalDate dataEmissione;
     private double importo;
     private String numero;
 
@@ -31,6 +32,6 @@ public class Fattura {
     private Cliente cliente;
 
     public void setDataEmissione(LocalDate localDate) {
-        this.data_emissione = localDate;
+        this.dataEmissione = localDate;
     }
 }

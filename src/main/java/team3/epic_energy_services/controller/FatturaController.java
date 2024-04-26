@@ -36,7 +36,7 @@ public class FatturaController {
     }
 
     @GetMapping
-    public Page<Fattura> getAllFatture(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "date") String sort) {
+    public Page<Fattura> getAllFatture(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataEmissione") String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return fatturaService.getAllFatture(pageable);
     }
