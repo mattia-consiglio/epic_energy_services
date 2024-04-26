@@ -1,5 +1,6 @@
 package team3.epic_energy_services.services;
 
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.repositories.FattureInterface;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,7 +74,7 @@ public class FatturaService {
         fattureInterface.delete(existingFattura);
     }
 
-    public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto) {
+    public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year) {
 
         return (root, query, cb) -> {
             Predicate p = cb.conjunction();
@@ -88,16 +90,18 @@ public class FatturaService {
             if (minImporto != null && maxImporto != null) {
                 p = cb.and(p, cb.between(root.get("importo"), minImporto, maxImporto));
             }
+            if (year != null) {
+                LocalDate startOfYear = LocalDate.of(year, 1, 1);
+                LocalDate endOfYear = LocalDate.of(year, 12, 31);
+                p = cb.and(p, cb.between(root.get("dataEmissione"), startOfYear, endOfYear));
+            }
             return p;
         };
     }
 
-    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto) {
-        Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto);
-        return fattureInterface.findAll(spec);
+    public Page<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year, Pageable pageable) {
+        Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto, year);
+        return fattureInterface.findAll(spec, pageable);
     }
 
-    public List<Fattura> getFatturaByYear(Integer year) {
-        return fattureInterface.findFatturaByYear(year);
-    }
 }
