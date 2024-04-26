@@ -69,4 +69,8 @@ public class ProvinciaService {
             throw new BadRequestException(e.getMessage());
         }
     }
+
+    public long countProvince() {
+        return provinciaRepository.count();
+    }
 }

@@ -1,6 +1,5 @@
 package team3.epic_energy_services.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,8 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class Config {
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -25,10 +23,6 @@ public class Config {
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); //disable session management, managed by JWT
 
         httpSecurity.authorizeRequests(http -> http.requestMatchers("/**").permitAll());
-        //add entry point for unauthorized requests (401) (Not working, WHY?)
-        httpSecurity.exceptionHandling(exceptionHandling ->
-                exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-        );
         return httpSecurity.build();
     }
 

@@ -1,8 +1,11 @@
 package team3.epic_energy_services.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import team3.epic_energy_services.entities.Cliente;
 import team3.epic_energy_services.entities.Comune;
 import team3.epic_energy_services.entities.Provincia;
 import team3.epic_energy_services.exceptions.BadRequestException;
@@ -40,8 +43,9 @@ public class ComuneService {
         comuneRepository.save(comune);
     }
 
-    public List<Comune> getAllComuni() {
-        return comuneRepository.findAll();
+    public Page<Comune> getAllComuni(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return comuneRepository.findAll(pageable);
     }
 
     public GeneralMessageDTO importComuni() {
@@ -77,5 +81,9 @@ public class ComuneService {
         } catch (IOException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    public long countComuni() {
+        return comuneRepository.count();
     }
 }
