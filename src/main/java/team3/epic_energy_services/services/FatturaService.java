@@ -14,7 +14,6 @@ import team3.epic_energy_services.payloads.FatturaDTO;
 import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.repositories.FattureInterface;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +58,7 @@ public class FatturaService {
         newFattura.setCliente(cliente);
         return fattureInterface.save(newFattura);
     }
-    
+
 
     public Fattura updateStatoFattura(UUID id, StatoFatturaDTO statoFatturaDTO) {
         Fattura existingFattura = this.getFattura(id);
@@ -73,7 +72,7 @@ public class FatturaService {
         fattureInterface.delete(existingFattura);
     }
 
-    public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, BigDecimal minImporto, BigDecimal maxImporto) {
+    public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto) {
 
         return (root, query, cb) -> {
             Predicate p = cb.conjunction();
@@ -93,7 +92,7 @@ public class FatturaService {
         };
     }
 
-    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, BigDecimal minImporto, BigDecimal maxImporto) {
+    public List<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto) {
         Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto);
         return fattureInterface.findAll(spec);
     }

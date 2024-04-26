@@ -14,7 +14,6 @@ import team3.epic_energy_services.payloads.FatturaDTO;
 import team3.epic_energy_services.payloads.StatoFatturaDTO;
 import team3.epic_energy_services.services.FatturaService;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -68,8 +67,8 @@ public class FatturaController {
             @RequestParam(required = false) StatoFattura stato,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
-            @RequestParam(required = false) BigDecimal minImporto,
-            @RequestParam(required = false) BigDecimal maxImporto) {
+            @RequestParam(required = false) Double minImporto,
+            @RequestParam(required = false) Double maxImporto) {
         return fatturaService.getFatturaByClienteStatoDataRangeImporto(clienteId, stato, startDate, endDate, minImporto, maxImporto);
     }
 
