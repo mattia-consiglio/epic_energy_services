@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ComuneRepository extends JpaRepository<Comune, UUID> {
     Optional<Comune> findByNomeIgnoreCase(String nome);
+
+    long count();
 }

@@ -3,7 +3,9 @@ package team3.epic_energy_services.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import team3.epic_energy_services.entities.Cliente;
 import team3.epic_energy_services.entities.Indirizzo;
@@ -14,6 +16,7 @@ import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.repositories.ClienteRepository;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -52,7 +55,11 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Page<Cliente> getClienti(Pageable pageable) {
+    public Page<Cliente> getClienti(int page, int size, String sort) {
+        if (Objects.equals(sort, "sedeLegale")) {
+            sort = "sedeLegale.comune.provincia.nome";
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return clienteRepository.findAll(pageable);
     }
 

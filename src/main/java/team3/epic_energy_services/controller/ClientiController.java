@@ -2,9 +2,6 @@ package team3.epic_energy_services.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -37,8 +34,8 @@ public class ClientiController {
 
     @GetMapping
     public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataUltimoContatto") String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteService.getClienti(pageable);
+
+        return clienteService.getClienti(page, size, sort);
     }
 
     @GetMapping("/{id}")

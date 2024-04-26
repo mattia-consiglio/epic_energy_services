@@ -17,10 +17,10 @@ public class CSVRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (provinciaService.getAllProvince().isEmpty()) {
+        if (provinciaService.countProvince() == 0) {
             provinciaService.importProvince();
         }
-        if (comuneService.getAllComuni().isEmpty()) {
+        if (comuneService.countComuni() == 0) {
             comuneService.importComuni();
         }
     }
