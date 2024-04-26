@@ -8,14 +8,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.Cliente;
-import team3.epic_energy_services.entities.Fattura;
-import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.services.ClienteService;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,9 +34,15 @@ public class ClientiController {
     }
 
     @GetMapping
-    public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataUltimoContatto") String sort) {
+    public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "dataUltimoContatto") String sort,
+                                    @RequestParam(required = false) Double fatturatoAnnuale,
+                                    @RequestParam(required = false) LocalDate dataInserimento,
+                                    @RequestParam(required = false) LocalDate dataUltimoContatto,
+                                    @RequestParam(required = false) String ragioneSociale) {
 
-        return clienteService.getClienti(page, size, sort);
+        return clienteService.getClienti(page, size, sort, fatturatoAnnuale, dataInserimento, dataUltimoContatto, ragioneSociale);
     }
 
     @GetMapping("/{id}")
@@ -61,15 +64,6 @@ public class ClientiController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void eliminaCliente(@PathVariable UUID id) {
         clienteService.eliminaCliente(id);
-    }
-
-    @GetMapping("/filter")
-    public List<Cliente> getFatturaByCliente(
-            @RequestParam(required = false) Double fatturatoAnnuale,
-            @RequestParam(required = false) LocalDate dataInserimento,
-            @RequestParam(required = false) LocalDate dataUltimoContatto,
-            @RequestParam(required = false) String ragioneSociale) {
-        return clienteService.getClientiByTipoRagioneSociale(fatturatoAnnuale, dataInserimento, dataUltimoContatto, ragioneSociale);
     }
 
 }
