@@ -6,10 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import team3.epic_energy_services.entities.Fattura;
-import team3.epic_energy_services.entities.StatoFattura;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +19,6 @@ public interface FattureInterface extends JpaRepository<Fattura, UUID> {
 
     List<Fattura> findAll(Specification<Fattura> spec);
 
-    @Query(value = "SELECT * FROM Fatture f WHERE EXTRACT(YEAR FROM f.data_emissione) = :year", nativeQuery = true)
+    @Query(value = "SELECT * FROM Fatture f WHERE EXTRACT(YEAR FROM f.dataEmissione) = :year", nativeQuery = true)
     List<Fattura> findFatturaByYear(@Param("year") Integer year);
 }

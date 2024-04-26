@@ -83,7 +83,7 @@ public class FatturaService {
                 p = cb.and(p, cb.equal(root.get("stato"), stato));
             }
             if (startDate != null && endDate != null) {
-                p = cb.and(p, cb.between(root.get("data"), startDate, endDate));
+                p = cb.and(p, cb.between(root.get("dataEmissione"), startDate, endDate));
             }
             if (minImporto != null && maxImporto != null) {
                 p = cb.and(p, cb.between(root.get("importo"), minImporto, maxImporto));
