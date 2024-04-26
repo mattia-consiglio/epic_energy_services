@@ -1,6 +1,5 @@
 package team3.epic_energy_services.services;
 
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,38 +12,33 @@ import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.FatturaDTO;
 import team3.epic_energy_services.payloads.StatoFatturaDTO;
-import team3.epic_energy_services.repositories.FattureInterface;
+import team3.epic_energy_services.repositories.FatturaRepository;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.UUID;
 
 
 @Service
 public class FatturaService {
-    private final FattureInterface fattureInterface;
-    private final StatoFatturaService statoFatturaService;
-    private final ClienteService clienteService;
-
+    @Autowired
+    private FatturaRepository fatturaRepository;
 
     @Autowired
-    public FatturaService(FattureInterface fattureInterface, StatoFatturaService statoFatturaService, ClienteService clienteService) {
-        this.fattureInterface = fattureInterface;
-        this.statoFatturaService = statoFatturaService;
-        this.clienteService = clienteService;
-    }
+    private StatoFatturaService statoFatturaService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     public Fattura getFattura(UUID id) {
-        return fattureInterface.findById(id).orElseThrow(() -> new BadRequestException("Fattura not found"));
+        return fatturaRepository.findById(id).orElseThrow(() -> new BadRequestException("Fattura not found"));
     }
 
     public Fattura getFatturaByNumero(String numero) {
-        return (Fattura) fattureInterface.findByNumero(numero).orElseThrow(() -> new BadRequestException("Fattura not found"));
+        return (Fattura) fatturaRepository.findByNumero(numero).orElseThrow(() -> new BadRequestException("Fattura not found"));
     }
 
     public Page<Fattura> getAllFatture(Pageable pageable) {
-        return fattureInterface.findAll(pageable);
+        return fatturaRepository.findAll(pageable);
     }
 
     public Fattura createFattura(FatturaDTO fattura) {
@@ -58,7 +52,7 @@ public class FatturaService {
         cliente = clienteService.updateDataUltimoContatto(cliente);
         cliente = clienteService.updateFatturatoAnnuale(cliente, newFattura.getImporto());
         newFattura.setCliente(cliente);
-        return fattureInterface.save(newFattura);
+        return fatturaRepository.save(newFattura);
     }
 
 
@@ -66,12 +60,12 @@ public class FatturaService {
         Fattura existingFattura = this.getFattura(id);
         StatoFattura statoFattura = statoFatturaService.getStatoFatturaByStato(statoFatturaDTO.stato());
         existingFattura.setStato(statoFattura);
-        return fattureInterface.save(existingFattura);
+        return fatturaRepository.save(existingFattura);
     }
 
     public void deleteFattura(UUID id) {
         Fattura existingFattura = getFattura(id);
-        fattureInterface.delete(existingFattura);
+        fatturaRepository.delete(existingFattura);
     }
 
     public Specification<Fattura> getFatturaSpecification(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year) {
@@ -101,7 +95,7 @@ public class FatturaService {
 
     public Page<Fattura> getFatturaByClienteStatoDataRangeImporto(UUID clienteId, StatoFattura stato, LocalDate startDate, LocalDate endDate, Double minImporto, Double maxImporto, Integer year, Pageable pageable) {
         Specification<Fattura> spec = getFatturaSpecification(clienteId, stato, startDate, endDate, minImporto, maxImporto, year);
-        return fattureInterface.findAll(spec, pageable);
+        return fatturaRepository.findAll(spec, pageable);
     }
 
 }
