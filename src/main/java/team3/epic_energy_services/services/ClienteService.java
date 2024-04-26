@@ -1,19 +1,20 @@
 package team3.epic_energy_services.services;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import team3.epic_energy_services.entities.Cliente;
-import team3.epic_energy_services.entities.Indirizzo;
-import team3.epic_energy_services.entities.TipoRagioneSociale;
+import team3.epic_energy_services.entities.*;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.exceptions.ResourceNotFoundException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.repositories.ClienteRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -97,6 +98,31 @@ public class ClienteService {
     public Cliente updateFatturatoAnnuale(Cliente cliente, double fatturato) {
         cliente.setFatturatoAnnuale(cliente.getFatturatoAnnuale() + fatturato);
         return clienteRepository.save(cliente);
+    }
+
+    public Specification<Cliente> getClienteSpecification(Double fatturatoAnnuale, LocalDate dataInserimento, LocalDate dataUltimoContatto, String ragioneSociale) {
+
+        return (root, query, cb) -> {
+            Predicate p = cb.conjunction();
+            if (fatturatoAnnuale != null) {
+                p = cb.and(p, cb.equal(root.get("fatturatoAnnuale"), fatturatoAnnuale));
+            }
+            if (dataInserimento != null) {
+                p = cb.and(p, cb.equal(root.get("dataInserimento"), dataInserimento));
+            }
+            if (dataUltimoContatto != null) {
+                p = cb.and(p, cb.equal(root.get("dataUltimoContatto"), dataUltimoContatto));
+            }
+            if (ragioneSociale != null ) {
+                p = cb.and(p, cb.like(root.get("ragioneSociale"), "%" + ragioneSociale + "%"));
+            }
+            return p;
+        };
+    }
+
+    public List<Cliente> getClientiByTipoRagioneSociale(Double fatturatoAnnuale, LocalDate dataInserimento, LocalDate dataUltimoContatto, String ragioneSociale) {
+        Specification<Cliente> spec = getClienteSpecification(fatturatoAnnuale, dataInserimento, dataUltimoContatto, ragioneSociale);
+        return clienteRepository.findAll(spec);
     }
 }
 

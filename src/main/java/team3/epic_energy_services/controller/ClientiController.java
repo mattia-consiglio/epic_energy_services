@@ -11,10 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import team3.epic_energy_services.entities.Cliente;
+import team3.epic_energy_services.entities.Fattura;
+import team3.epic_energy_services.entities.StatoFattura;
 import team3.epic_energy_services.exceptions.BadRequestException;
 import team3.epic_energy_services.payloads.ClienteDTO;
 import team3.epic_energy_services.services.ClienteService;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -62,5 +66,13 @@ public class ClientiController {
         clienteService.eliminaCliente(id);
     }
 
+    @GetMapping("/filter")
+    public List<Cliente> getFatturaByClienteStatoDataRangeImporto(
+            @RequestParam(required = false) Double fatturatoAnnuale,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate dataUltimoContatto,
+            @RequestParam(required = false) String ragioneSociale) {
+        return clienteService.getClientiByTipoRagioneSociale(fatturatoAnnuale, dataInserimento, dataUltimoContatto, ragioneSociale);
+    }
 
 }
