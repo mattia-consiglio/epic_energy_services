@@ -67,7 +67,7 @@ public class ClientiController {
     }
 
     @GetMapping("/filter")
-    public List<Cliente> getFatturaByClienteStatoDataRangeImporto(
+    public List<Cliente> getFatturaByCliente(
             @RequestParam(required = false) Double fatturatoAnnuale,
             @RequestParam(required = false) LocalDate dataInserimento,
             @RequestParam(required = false) LocalDate dataUltimoContatto,
